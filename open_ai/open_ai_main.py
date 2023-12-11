@@ -12,7 +12,6 @@ model = 'gpt-3.5-turbo-16k'
 role = """Ты - помощник по всем айти вопросам"""
 
 logger = logger.logging.getLogger("bot")
-client = OpenAI()
 
 
 def one_response(message):
@@ -27,5 +26,5 @@ def one_response(message):
     logger.info('success')
     reply = response.choices[0].message.content
     content = reply
-    tokens_total = response.usage.total_tokens
-    return content, tokens_total
+    # tokens_total = response.usage.total_tokens
+    return content
