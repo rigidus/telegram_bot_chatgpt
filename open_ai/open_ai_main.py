@@ -24,7 +24,6 @@ def one_response(message):
             {"role": "user", "content": f"{message}"}
         ]
     )
-    print(response)
     logger.info('success')
     reply = response.choices[0].message.content
     content = reply
