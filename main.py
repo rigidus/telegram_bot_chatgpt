@@ -6,6 +6,7 @@ from telegram.ext import ApplicationBuilder, ContextTypes, CommandHandler, Messa
 from credentials import bot_token
 from open_ai.open_ai_main import one_response
 from modules.logs_setup import logger
+from credentials import bot_name
 
 logger = logger.logging.getLogger("bot")
 
@@ -23,8 +24,8 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def check_for_mention(update: Update, context: ContextTypes.DEFAULT_TYPE):
     message = update.effective_message
     message_text = message.text
-    if '@GPT4_lightny_bot' in message_text:
-        message_text_meaning = message_text.replace('@GPT4_lightny_bot ', '')
+    if f'@{bot_name}' in message_text:
+        message_text_meaning = message_text.replace(f'@{bot_name} ', '')
         logger.info(f'asking the question:{message_text_meaning}')
         reply = one_response(message_text_meaning)
         await update.effective_message.reply_text(text=reply, reply_to_message_id=message.id)
