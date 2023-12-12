@@ -8,7 +8,8 @@ from modules.logs_setup import logger
 load_dotenv()
 openai.organization = "org-dTq0wzkkXgmTQ1GIDabM4fva"
 openai.api_key = os.getenv("OPENAI_API_KEY")
-model = 'gpt-3.5-turbo-16k'
+# model = 'gpt-3.5-turbo-16k'
+model = 'gpt-4-1106-preview'
 role = """Ты - помощник по всем айти вопросам"""
 
 logger = logger.logging.getLogger("bot")
@@ -17,12 +18,13 @@ logger = logger.logging.getLogger("bot")
 def one_response(message):
     client_ai = OpenAI()
     response = client_ai.chat.completions.create(
-        model="gpt-3.5-turbo",
+        model=model,
         messages=[
             {"role": "system", "content": f"{role}"},
             {"role": "user", "content": f"{message}"}
         ]
     )
+    print(response)
     logger.info('success')
     reply = response.choices[0].message.content
     content = reply
