@@ -26,7 +26,7 @@ async def check_for_gpt_question(update: Update, context: ContextTypes.DEFAULT_T
     message_text = message.text
     if f'@{context.bot.username}' in message_text:
         first_reply = await update.effective_message.reply_text(text='Thinking...', reply_to_message_id=message.id)
-        message_text_meaning = message_text.replace(f'@{bot_name} ', '')
+        message_text_meaning = message_text.replace(f'@{context.bot.username} ', '')
         logger.info(f'asking the question:{message_text_meaning}')
         reply = await one_response(message_text_meaning)
         await first_reply.edit_text(text=reply)
