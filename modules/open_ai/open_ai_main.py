@@ -15,7 +15,7 @@ role = """Ты - помощник по всем айти вопросам"""
 logger = logger.logging.getLogger("bot")
 
 
-def one_response(message):
+async def one_response(message):
     client_ai = OpenAI()
     response = client_ai.chat.completions.create(
         model=model,
@@ -29,3 +29,14 @@ def one_response(message):
     content = reply
     # tokens_total = response.usage.total_tokens
     return content
+
+
+async def multiple_responses(messages):
+    client_ai = OpenAI()
+    response = client_ai.chat.completions.create(
+        model=model,
+        messages=messages
+    )
+    logger.info('success')
+    reply = response.choices[0].message.content
+    return reply

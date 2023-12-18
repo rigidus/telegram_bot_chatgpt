@@ -4,7 +4,8 @@ from telegram import Update
 from telegram.ext import ApplicationBuilder, ContextTypes, CommandHandler, MessageHandler, filters
 
 from credentials import bot_token
-from open_ai.open_ai_main import one_response
+from modules.image_processing.message_processing import msg_process_main
+from modules.open_ai.open_ai_main import one_response
 from modules.logs_setup import logger
 from credentials import bot_name
 
@@ -21,14 +22,21 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 #     await context.bot.send_message(chat_id=update.effective_chat.id, text=f'{counted_members}')
 
 
-async def check_for_mention(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def check_for_gpt_question(update: Update, context: ContextTypes.DEFAULT_TYPE):
     message = update.effective_message
     message_text = message.text
-    if f'@{bot_name}' in message_text:
+    if f'@{context.bot.username}' in message_text:
+        first_reply = await update.effective_message.reply_text(text='Thinking...', reply_to_message_id=message.id)
         message_text_meaning = message_text.replace(f'@{bot_name} ', '')
         logger.info(f'asking the question:{message_text_meaning}')
-        reply = one_response(message_text_meaning)
-        await update.effective_message.reply_text(text=reply, reply_to_message_id=message.id)
+        reply = await one_response(message_text_meaning)
+        await first_reply.edit_text(text=reply)
+    elif message.reply_to_message is not None:
+        reply_user = message.reply_to_message.from_user
+        if reply_user.id == context.bot.id:
+            first_reply = await update.effective_message.reply_text(text='Thinking...', reply_to_message_id=message.id)
+            reply = await msg_process_main(context, message)
+            await first_reply.edit_text(text=reply)
 
 
 if __name__ == '__main__':
@@ -36,7 +44,7 @@ if __name__ == '__main__':
 
     start_handler = CommandHandler('start', start)
     # count_members_handler = CommandHandler('count_members', count_members)
-    mention_handler = MessageHandler(filters.ALL, check_for_mention)
+    mention_handler = MessageHandler(filters.ALL, check_for_gpt_question)
 
     application.add_handler(start_handler)
     # application.add_handler(count_members_handler)
