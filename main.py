@@ -4,7 +4,7 @@ from telegram import Update
 from telegram.ext import ApplicationBuilder, ContextTypes, CommandHandler, MessageHandler, filters
 
 from credentials import bot_token
-from modules.image_processing.message_processing import msg_process_main
+from modules.message_processing.message_processing import msg_process_main
 from modules.open_ai.open_ai_main import one_response
 from modules.logs_setup import logger
 
